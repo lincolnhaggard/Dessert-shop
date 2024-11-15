@@ -53,24 +53,24 @@ class Sundae(IceCream):
 
 class Order:
     def __init__(self):
-        self.ordor=[]
+        self.order=[]
 
     def add(self,item):
         if isinstance(item,DessertItem):
-            self.ordor.append(item)
+            self.order.append(item)
     
     def __len__(self):
-        return len(self.ordor)
+        return len(self.order)
 
     def ordor_cost(self):
         total=0
-        for item in self.ordor:
+        for item in self.order:
             total+=item.calculate_cost()
         return total
     
     def ordor_tax(self):
         total_tax=0
-        for item in self.ordor:
+        for item in self.order:
             total_tax+=item.calculate_tax()
         return total_tax
 
