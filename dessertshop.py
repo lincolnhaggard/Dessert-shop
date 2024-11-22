@@ -172,5 +172,5 @@ def main():
     data.append(["Order Subtotals",subtotal,total_tax])
     data.append(["Order Total",None,subtotal+total_tax])
     data.append(["Total items in the order",None,str(len(order))])
-    make_receipt(data,"receipt.pdf")
+    make_receipt(data,"receipt.txt")
 main()
