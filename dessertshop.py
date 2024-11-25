@@ -1,5 +1,9 @@
-from receipt import make_receipt
 from desserts import (Candy,Cookie,IceCream,Sundae,Order)
+from reportlab.platypus import SimpleDocTemplate, Table, Paragraph, TableStyle 
+from reportlab.lib import colors 
+from reportlab.lib.pagesizes import A4 
+from reportlab.lib.styles import getSampleStyleSheet 
+
 
 class DessertShop:
     def user_prompt_candy(self):
@@ -116,6 +120,25 @@ class DessertShop:
         sundae=Sundae(name,scoop_count,price_per_scoop,topping_name,topping_price)
         return sundae
 
+def make_receipt(data):
+    pdf = SimpleDocTemplate( "receipt.pdf" , pagesize = A4 )
+    styles = getSampleStyleSheet() 
+    title_style = styles[ "Heading1" ] 
+    title_style.alignment = 1
+    title = Paragraph( "Receipt" , title_style ) 
+    style = TableStyle( 
+    [ 
+        ( "BOX" , ( 0, 0 ), ( -1, -1 ), 1 , colors.black ), 
+        ( "GRID" , ( 0, 0 ), ( 4 , 4 ), 1 , colors.black ), 
+        ( "BACKGROUND" , ( 0, 0 ), ( 3, 0 ), colors.gray ), 
+        ( "TEXTCOLOR" , ( 0, 0 ), ( -1, 0 ), colors.whitesmoke ), 
+        ( "ALIGN" , ( 0, 0 ), ( -1, -1 ), "LEFT" ), 
+        ( "BACKGROUND" , ( 0 , 1 ) , ( -1 , -1 ), colors.beige ), 
+    ] 
+    ) 
+    table = Table( data , style = style ) 
+    pdf.build([ title , table ]) 
+
 def main():
     shop = DessertShop()
     order = Order()
@@ -161,7 +184,7 @@ def main():
             case _:
                 print('Invalid response: Please enter a choice from the menu (1-4) or Enter')
         print()
-    data=[]
+    data=[["Item","Price","Tax"]]
     total_tax=0
     subtotal=0
     for item in order.order:
@@ -170,7 +193,8 @@ def main():
         subtotal+=item.calculate_cost()
     data.append(["--------------------------------------------------------",None,None])
     data.append(["Order Subtotals",subtotal,total_tax])
-    data.append(["Order Total",None,subtotal+total_tax])
-    data.append(["Total items in the order",None,str(len(order))])
-    make_receipt(data,"receipt.txt")
+    data.append(["Order Total","",subtotal+total_tax])
+    data.append(["Total items in the order","",str(len(order))])
+    make_receipt(data)
+    print(order)
 main()
